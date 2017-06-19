@@ -1,0 +1,35 @@
+DateKey = CALENDAR(DATE(2012,01,01),DATE(2017,06,30))
+ 
+## Then add in a new column from the ribbon for each of the following:
+ 
+Year = YEAR(DateKey[Date])
+Month number = MONTH(DateKey[Date])
+Month = FORMAT(DateKey[Date],"MMM")
+Day = FORMAT(DateKey[Date],"ddd")
+Week = WEEKNUM(DateKey[Date],1)
+Quarter = "Q" & ROUNDUP(MONTH(DateKey[Date])/3,0)
+MonthY = FORMAT(DateKey[Date],"MMM")&" " &DateKey[Year]
+Day number = DAY(DateKey[Date])
+Financial year = IF(DateKey[Month number]>6,DateKey[Year]+1,DateKey[Year])
+Financial week = IF(DateKey[Month number]>6,DateKey[Week]-26,DateKey[Week]+26)
+Total days = DAY(DATE(DateKey[Year],DateKey[Month number]+1,1)-1)
+Financial month number = IF((DateKey[Month number]-6)<=0,DateKey[Month number]+6,DateKey[Month number]-6)
+Financial month = FORMAT(DateKey[Date],"MMM")
+Index = CALCULATE(COUNT(DateKey[Date]),ALL(DateKey[Date]),FILTER(DateKey,DateKey[Date]<=EARLIER(DateKey[Date])))
+Monthy number = DateKey[Year]&DateKey[Month number]
+ 
+ 
+## Measures:
+
+Current financial week = IF(WEEKNUM(NOW())-26<=0,WEEKNUM(NOW())+26,WEEKNUM(NOW())-26)
+Current financial month = IF(MONTH(NOW())-6<=0,MONTH(NOW())+6,MONTH(NOW())-6)
+Today = DATE(YEAR(NOW()),MONTH(NOW()),DAY(NOW()))
+ 
+## Rolling filters:
+ 
++/- 1 months = IF(AND(DateKey[Financial month number]>=[Current financial month]-1,DateKey[Financial month number]<=[Current financial month]),1,0)
+Last 30 day = IF(AND(DateKey[Date]>=[Today]-30,DateKey[Date]<=[Today]),1,0)
+Last week + two weeks = IF(AND(DateKey[Financial week]>=[Current financial week]-1,DateKey[Financial week]<=[Current financial week]+2),1,0)
+Last 14 days = IF(AND(DateKey[Date]>=[Today]-14,DateKey[Date]<=[Today]),1,0)
++/- 30 days = IF(AND(DateKey[Date]>=[Today]-30,DateKey[Date]<=[Today]+30),1,0)
+  

@@ -33,3 +33,23 @@ Last week + two weeks = IF(AND(DateKey[Financial week]>=[Current financial week]
 Last 14 days = IF(AND(DateKey[Date]>=[Today]-14,DateKey[Date]<=[Today]),1,0)
 +/- 30 days = IF(AND(DateKey[Date]>=[Today]-30,DateKey[Date]<=[Today]+30),1,0)
   
+
+
+## or:
+
+Date_New =
+ADDCOLUMNS (
+CALENDAR ( "1-jan-2010", "31-dec-2020" ),
+"Date Key", FORMAT ( [Date], "YYYYMMDD" ),
+"Year", YEAR ( [Date] ),
+"Month number", FORMAT ( [Date], "MM" ),
+"Year Month number", FORMAT ( [Date], "YYYY/MM" ),
+"Year Month Short", FORMAT ( [Date], "YYYY/mmm" ),
+"Month Name Short", FORMAT ( [Date], "mmm" ),
+"Month Name Long", FORMAT ( [Date], "mmmm" ),
+"Day of Week Number", WEEKDAY ( [Date] ),
+"Day of Week", FORMAT ( [Date], "dddd" ),
+"Day of Week Short", FORMAT ( [Date], "dddd" ),
+"Quarter", "Q" & FORMAT ( [Date], "Q" ),
+"Year Quarter", FORMAT ( [Date], "YYYY" ) & "/Q" & FORMAT ( [Date], "Q" )
+)
